@@ -8,6 +8,10 @@ import org.springframework.core.env.ConfigurableEnvironment;
 
 @Configuration
 public class WebClientSupplierAutoConfiguration {
+    public WebClientSupplierAutoConfiguration() {
+        System.out.println("hello");
+    }
+
     @Bean
     public BeanDefinitionRegistryPostProcessor remoteServiceSupplier(ConfigurableEnvironment environment){
         return new RemoteServiceSupplier(environment);

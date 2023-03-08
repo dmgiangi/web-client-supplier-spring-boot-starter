@@ -1,1 +1,2 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=dev.dmgiangi.webclientsupplier.WebClientSupplierAutoConfiguration
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  dev.dmgiangi.webclientsupplier.WebClientSupplierAutoConfiguration
