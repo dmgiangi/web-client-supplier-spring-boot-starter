@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  dev.dmgiangi.webclientsupplier.WebClientSupplierAutoConfiguration
+  dev.dmgiangi.webclientsupplier.configurations.WebClientSupplierAutoConfiguration, dev.dmgiangi.webclientsupplier.configurations.RemoteServiceSupplier
