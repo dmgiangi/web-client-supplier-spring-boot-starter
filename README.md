@@ -1,7 +1,6 @@
 # Web Clients Supplier Spring boot Starter
 
-Web Clients Supplier allow you to inject in the spring context beans of web
-client configured in multiple fashion.\
+Web Clients Supplier allow you to inject in the spring context beans of web client configured in multiple fashion.\
 The supported client at the moment are:
 
 - _**RestTemplate**_
@@ -40,33 +39,32 @@ insert in your configuration the following configuration.\
 
 ```yaml
 wcs:
-  WebClientBeanName1:
+  clientName:
     type: REST_TEMPLATE
-  WebClientBeanName2:
-    type: WEB_CLIENT
+  secondClientName:
+    type: REST_TEMPLATE
 ```
 
 then inject in the context with
 
 ```java
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.web.client.RestTemplate;
+import ...
 
-public class YourClass1 {
-	private final RestTemplate restTemplate;
-
-	public YourClass1(
-			@Qualifier("WebClientBeanName1") RestTemplate restTemplate) {
-		this.restTemplate = restTemplate;
-	}
-}
-
-public class YourClass2 {
-	private final WebClient webClient;
-
-	public YourClass2(@Qualifier("WebClientBeanName2") WebClient webClient) {
-		this.webClient = webClient;
-	}
+@SpringBootTest
+class WebClientSupplierTestApplicationTests {
+    @Autowired
+    @Qualifier("clientName")
+    private RestTemplate client;
+    
+    @Autowired
+    @Qualifier("secondClientName")
+    private RestTemplate secondClient;
+    
+    @Test
+    void contextLoads() {
+        assertThat(client).isNotNull();
+	assertThat(secondClient).isNotNull();
+    }
 }
 ```
 
