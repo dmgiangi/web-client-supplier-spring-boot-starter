@@ -44,15 +44,15 @@ public class ParsingUtilities {
 		final String booleanAsString = clientConfiguration.get(id + appender);
 
 		if (booleanAsString == null) {
-			if (LOGGER.isInfoEnabled())
-				LOGGER.info(FALLING_BACK_FROM_UNDEFINED_WITH_ACCEPTED_IGNORING_CASE, id, appender, fallback, TRUE_FALSE);
+			if (LOGGER.isTraceEnabled())
+				LOGGER.trace(FALLING_BACK_FROM_UNDEFINED_WITH_ACCEPTED_IGNORING_CASE, id, appender, fallback, TRUE_FALSE);
 			return fallback;
 		}
 
 		try {
 			final Boolean value = ParsingUtilities.parseBoolean(booleanAsString);
-			if (LOGGER.isDebugEnabled())
-				LOGGER.debug(CORRECTLY_DETECTED_FOR_CLIENT, id, appender, value);
+			if (LOGGER.isTraceEnabled())
+				LOGGER.trace(CORRECTLY_DETECTED_FOR_CLIENT, id, appender, value);
 			return value;
 		} catch (NumberFormatException e) {
 			if (LOGGER.isWarnEnabled())
@@ -65,8 +65,8 @@ public class ParsingUtilities {
 		final String integerAsString = clientConfiguration.get(id + appender);
 
 		if (integerAsString == null) {
-			if (LOGGER.isInfoEnabled())
-				LOGGER.info(FALLING_BACK_FROM_UNDEFINED_WITH_ACCEPTED, id, appender, fallback, INT_RANGE);
+			if (LOGGER.isTraceEnabled())
+				LOGGER.trace(FALLING_BACK_FROM_UNDEFINED_WITH_ACCEPTED, id, appender, fallback, INT_RANGE);
 
 			return fallback;
 		}
@@ -83,8 +83,8 @@ public class ParsingUtilities {
 			return fallback;
 		}
 
-		if (LOGGER.isDebugEnabled())
-			LOGGER.debug(CORRECTLY_DETECTED_FOR_CLIENT, id, appender, value);
+		if (LOGGER.isTraceEnabled())
+			LOGGER.trace(CORRECTLY_DETECTED_FOR_CLIENT, id, appender, value);
 
 		return value;
 	}
@@ -93,8 +93,8 @@ public class ParsingUtilities {
 		final String value = clientConfiguration.get(id + appender);
 
 		if (!StringUtils.hasText(value)) {
-			if (LOGGER.isDebugEnabled())
-				LOGGER.debug(FALLING_BACK_FROM_UNDEFINED, id, appender, null);
+			if (LOGGER.isTraceEnabled())
+				LOGGER.trace(FALLING_BACK_FROM_UNDEFINED, id, appender, null);
 
 			return null;
 		}
@@ -109,7 +109,10 @@ public class ParsingUtilities {
 			return null;
 
 		try {
-			return new URL(value);
+			URL url = new URL(value);
+			if (LOGGER.isTraceEnabled())
+				LOGGER.trace(CORRECTLY_DETECTED_FOR_CLIENT, id, appender, value);
+			return url;
 		} catch (MalformedURLException e) {
 			if (LOGGER.isWarnEnabled())
 				LOGGER.warn(FALLING_BACK_FROM_WRONG_URL, id, appender, value, null);
@@ -121,7 +124,7 @@ public class ParsingUtilities {
 		final String clientTypeString = clientConfiguration.get(id + WCSConstant.TYPE);
 		final ClientType clientType = ClientType.fromString(clientTypeString);
 
-		if (clientType.equals(ClientType.UNDEFINED)) {
+		if (clientType == null) {
 			if (LOGGER.isWarnEnabled())
 				LOGGER.warn(NON_ACCEPTABLE_VALUE_WITH_ACCEPTED_IGNORING_CASE,
 							id,
@@ -131,8 +134,8 @@ public class ParsingUtilities {
 							ClientType.getAcceptedValue());
 			return ClientConfiguration.DEFAULT_CLIENT;
 		} else {
-			if (LOGGER.isDebugEnabled())
-				LOGGER.debug(CORRECTLY_DETECTED_FOR_CLIENT, id, WCSConstant.TYPE, clientType);
+			if (LOGGER.isTraceEnabled())
+				LOGGER.trace(CORRECTLY_DETECTED_FOR_CLIENT, id, WCSConstant.TYPE, clientType);
 			return clientType;
 		}
 	}
@@ -141,7 +144,7 @@ public class ParsingUtilities {
 		final String protocolsString = clientConfiguration.get(id + WCSConstant.PROTOCOLS);
 		final Protocols protocols = Protocols.fromString(protocolsString);
 
-		if (protocols.equals(Protocols.UNDEFINED)) {
+		if (protocols == null) {
 			if (LOGGER.isWarnEnabled())
 				LOGGER.warn(NON_ACCEPTABLE_VALUE_WITH_ACCEPTED_IGNORING_CASE,
 							id,
@@ -151,29 +154,29 @@ public class ParsingUtilities {
 							Protocols.getAcceptedValue());
 			return ClientConfiguration.DEFAULT_PROTOCOLS;
 		} else {
-			if (LOGGER.isDebugEnabled())
-				LOGGER.debug(CORRECTLY_DETECTED_FOR_CLIENT, id, WCSConstant.PROTOCOLS, protocols);
+			if (LOGGER.isTraceEnabled())
+				LOGGER.trace(CORRECTLY_DETECTED_FOR_CLIENT, id, WCSConstant.PROTOCOLS, protocols);
 			return protocols;
 		}
 	}
 
-	static SecurityStoreType getTrustStore(Map<String, String> clientConfiguration, String id, String appender,
+	static SecurityStoreType getSecurityStoreType(Map<String, String> clientConfiguration, String id, String appender,
 			SecurityStoreType fallback) {
-		final String trustStoreString = clientConfiguration.get(id + appender);
-		final SecurityStoreType securityStoreType = SecurityStoreType.fromString(trustStoreString);
+		final String securityStoreTypeString = clientConfiguration.get(id + appender);
+		final SecurityStoreType securityStoreType = SecurityStoreType.fromString(securityStoreTypeString);
 
-		if (securityStoreType.equals(SecurityStoreType.DEFAULT)) {
+		if (securityStoreType == null) {
 			if (LOGGER.isWarnEnabled())
 				LOGGER.warn(NON_ACCEPTABLE_VALUE_WITH_ACCEPTED_IGNORING_CASE,
 							id,
 							appender,
-							trustStoreString,
+							securityStoreTypeString,
 							fallback,
 							SecurityStoreType.getAcceptedValue());
 			return fallback;
 		} else {
-			if (LOGGER.isDebugEnabled())
-				LOGGER.debug(CORRECTLY_DETECTED_FOR_CLIENT, id, appender, securityStoreType);
+			if (LOGGER.isTraceEnabled())
+				LOGGER.trace(CORRECTLY_DETECTED_FOR_CLIENT, id, appender, securityStoreType);
 			return securityStoreType;
 		}
 	}

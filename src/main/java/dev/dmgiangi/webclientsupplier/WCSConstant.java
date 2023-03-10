@@ -5,8 +5,8 @@ public class WCSConstant {
 	public static final String BEAN_FACTORY_LOGGER_NAME = "webClientSupplier.beanFactory";
 	public static final String WCS = "wcs";
 	public static final String TYPE = ".type";
-	public static final String PROTOCOLS = "protocols";
-	public static final String FAIL_FAST = "failFast";
+	public static final String PROTOCOLS = ".protocols";
+	public static final String RANDOM_SEED = ".randomSeed";
 	public static final String KEYSTORE_PATH = ".keystore.path";
 	public static final String KEYSTORE_PASSWORD = ".keystore.password";
 	public static final String KEYSTORE_URL = ".keystore.url";

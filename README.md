@@ -76,13 +76,13 @@ public class YourClass2 {
 wcs:
   clientName:
     type: _# One of [REST_TEMPLATE, WEB_CLIENT] default -> REST_TEMPLATE
-    protocols: _# One of [HTTP, HTTPS, BOTH] default -> BOTH
-    failFast: _# One of [true, false] default -> true
+    protocols: _# One of [PLAIN, SSL_V3, TLS,TLS_V1, TLS_V1_1, TLS_V1_2, TLS_V1_3] default -> BOTH
+    secureSeed: _# A random string for generation of secure random in encrypted connection. default -> generated at runtime
     keystore:
       path: _# todo
       password: _# todo
       url: _# todo
-      type: _# One of [JKS, PKCS12, PKCS8, DEFAULT]
+      type: _# One of [JCEKS, JKS, DKS, PKCS11, PKCS12, DEFAULT]
     timeout:
       maxConnection: _# Positive integer number
       maxConnectionPerRoute: _# Positive integer number
@@ -92,6 +92,6 @@ wcs:
       path: _# todo
       password: _# todo
       url: _# todo
-      type: _# One Of [JKS, PKCS12, PKCS8, URL, FILE, DEFAULT]
+      type: _# One Of [JCEKS, JKS, DKS, PKCS11, PKCS12, DEFAULT]
       ignoreServerCertificate: _# One of [true, false] default -> false
 ```

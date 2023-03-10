@@ -2,17 +2,17 @@ package dev.dmgiangi.webclientsupplier.supplier.strategy;
 
 import dev.dmgiangi.webclientsupplier.parser.dto.ClientConfiguration;
 import dev.dmgiangi.webclientsupplier.parser.dto.enumerations.ClientType;
-import dev.dmgiangi.webclientsupplier.supplier.SslContextFactory;
+import dev.dmgiangi.webclientsupplier.parser.dto.enumerations.Protocols;
 import dev.dmgiangi.webclientsupplier.supplier.dto.WcsBeanDefinition;
+import dev.dmgiangi.webclientsupplier.supplier.ssl.SslContextFactory;
 import lombok.AllArgsConstructor;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
-import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -20,6 +20,8 @@ import org.springframework.http.client.BufferingClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
+
+import javax.net.ssl.HostnameVerifier;
 
 @AllArgsConstructor
 public class RestTemplateStrategy implements BeanDefinitionStrategy {
@@ -46,9 +48,12 @@ public class RestTemplateStrategy implements BeanDefinitionStrategy {
 	private ClientHttpRequestFactory getRequestFactory(ClientConfiguration clientConfiguration) {
 		PoolingHttpClientConnectionManager poolingConnectionManager = getPoolingConnectionManager(clientConfiguration);
 
-		CloseableHttpClient httpClient = HttpClients.custom().setConnectionManager(poolingConnectionManager).build();
+		HttpClientBuilder httpClientBuilder = HttpClients.custom().setConnectionManager(poolingConnectionManager);
 
-		HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory(httpClient);
+		if (clientConfiguration.getTrustStore().isIgnoreServerCertificate())
+			httpClientBuilder.setSSLHostnameVerifier(getDummySslHostnameVerifier());
+
+		HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory(httpClientBuilder.build());
 
 		requestFactory.setConnectTimeout(clientConfiguration.getConnectionOptions().getConnectionTimeout());
 		requestFactory.setReadTimeout(clientConfiguration.getConnectionOptions().getReadTimeout());
@@ -56,23 +61,26 @@ public class RestTemplateStrategy implements BeanDefinitionStrategy {
 		return new BufferingClientHttpRequestFactory(requestFactory);
 	}
 
+	private HostnameVerifier getDummySslHostnameVerifier() {
+		HostnameVerifier hostnameVerifier = (hostname, session) -> true;
+
+		if (LOGGER.isWarnEnabled())
+			LOGGER.warn("");
+
+		return hostnameVerifier;
+	}
+
 	private PoolingHttpClientConnectionManager getPoolingConnectionManager(ClientConfiguration clientConfiguration) {
 
 		RegistryBuilder<ConnectionSocketFactory> registryBuilder = RegistryBuilder.create();
 
-		switch (clientConfiguration.getProtocols()) {
-		case HTTP:
+		Protocols protocols = clientConfiguration.getProtocols();
+
+		if (Protocols.PLAIN.equals(protocols)) {
 			registryBuilder.register(HTTP, PlainConnectionSocketFactory.getSocketFactory());
-			break;
-		case HTTPS:
-			registryBuilder.register(HTTPS, getSSLConnectionSocketFactory(clientConfiguration));
-			break;
-		case BOTH:
+		} else {
 			registryBuilder.register(HTTP, PlainConnectionSocketFactory.getSocketFactory());
 			registryBuilder.register(HTTPS, getSSLConnectionSocketFactory(clientConfiguration));
-			break;
-		case UNDEFINED:
-			throw new BeanCreationException("");
 		}
 
 		PoolingHttpClientConnectionManager poolingConnectionManager = new PoolingHttpClientConnectionManager(registryBuilder.build());

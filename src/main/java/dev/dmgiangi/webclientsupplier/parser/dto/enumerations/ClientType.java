@@ -11,7 +11,7 @@ public enum ClientType {
 		return Arrays.stream(ClientType.values())
 					 .filter(clientType -> clientType.name().equalsIgnoreCase(requestedType))
 					 .findAny()
-					 .orElse(ClientType.UNDEFINED);
+					 .orElse(null);
 	}
 
 	public static String getAcceptedValue() {

@@ -23,7 +23,7 @@ public class KeyStoreConfigurationFactory {
 	}
 
 	private static SecurityStoreType getClientSideTrustStore(Map<String, String> clientConfiguration, String id) {
-		return getTrustStore(clientConfiguration, id, KEYSTORE_TYPE, KeyStoreConfiguration.DEFAULT_TRUSTSTORE);
+		return getSecurityStoreType(clientConfiguration, id, KEYSTORE_TYPE, KeyStoreConfiguration.DEFAULT_TRUSTSTORE);
 	}
 
 	private static String getClientCertificatePassword(Map<String, String> clientConfiguration, String id) {

@@ -32,7 +32,7 @@ public class TrustStoreConfigurationFactory {
 	}
 
 	private static SecurityStoreType getTrustStoreType(Map<String, String> clientConfiguration, String id) {
-		return getTrustStore(clientConfiguration, id, TRUSTSTORE_TYPE, DEFAULT_TRUSTSTORE);
+		return getSecurityStoreType(clientConfiguration, id, TRUSTSTORE_TYPE, DEFAULT_TRUSTSTORE);
 	}
 
 	private static String getTruststorePath(Map<String, String> clientConfiguration, String id) {
