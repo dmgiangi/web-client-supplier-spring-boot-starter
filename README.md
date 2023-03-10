@@ -76,7 +76,7 @@ public class YourClass2 {
 wcs:
   clientName:
     type: _# One of [REST_TEMPLATE, WEB_CLIENT] default -> REST_TEMPLATE
-    protocols: _# One of [PLAIN, SSL_V3, TLS,TLS_V1, TLS_V1_1, TLS_V1_2, TLS_V1_3] default -> BOTH
+    protocols: _# One of [PLAIN, SSL_V3, TLS,TLS_V1, TLS_V1_1, TLS_V1_2, TLS_V1_3] default -> TLS
     secureSeed: _# A random string for generation of secure random in encrypted connection. default -> generated at runtime
     keystore:
       path: _# todo
