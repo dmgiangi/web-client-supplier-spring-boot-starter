@@ -22,7 +22,7 @@ import the dependency in your pom.xml:
 <dependency>
     <groupId>dev.dmgiangi</groupId>
     <artifactId>web-client-supplier-spring-boot-starter</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
 </dependency>
 ```
 
